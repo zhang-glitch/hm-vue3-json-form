@@ -22,6 +22,14 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    // 函数定义位置不能在调用之后
+    '@typescript-eslint/no-use-before-define': 'off',
+    // hasOwnProperty可以在Object.prototype中调用
+    'no-prototype-builtins': 'off',
+    // 关闭any类型警告
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    'vue/no-mutating-props': 'off',
     'prettier/prettier': [
       'error',
       // 这里定义的一些规则和.prettierrc中定义的规则是一样的。

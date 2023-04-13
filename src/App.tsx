@@ -122,6 +122,7 @@ export default defineComponent({
       customValidate?: any
     } = reactive({
       schema: {},
+      // 就是整个表单的data数据
       data: {},
       uiSchema: {},
       schemaCode: '',
@@ -134,13 +135,15 @@ export default defineComponent({
       // 当案列切换
       const index = selectedRef.value
       const d: any = demos[index]
-      console.log('dddd', d)
       demo.schema = d.schema
+      // 表单默认值
       demo.data = d.default
       demo.uiSchema = d.uiSchema
+      // 各个部分编辑器默认值
       demo.schemaCode = toJson(d.schema)
       demo.dataCode = toJson(d.default)
       demo.uiSchemaCode = toJson(d.uiSchema)
+      // 参数验证函数
       demo.customValidate = d.customValidate
     })
 
@@ -160,8 +163,10 @@ export default defineComponent({
       filed: 'schema' | 'data' | 'uiSchema',
       value: string,
     ) {
+      // 防止输入的内容不符合json规范，报错
       try {
         const json = JSON.parse(value)
+        // field的值是对象， fieldCode的值是一个json字符串
         demo[filed] = json
         ;(demo as any)[`${filed}Code`] = value
       } catch (err) {
@@ -174,10 +179,10 @@ export default defineComponent({
     const handleUISchemaChange = (v: string) => handleCodeChange('uiSchema', v)
 
     // 验证，内部就是调用ajv.validate函数处理的。
-    const handleValidate = () => {
-      const { valid, errors, errorSchema } = methodRef.value.doValidate()
-      console.log(valid, errors, errorSchema)
-    }
+    // const handleValidate = () => {
+    //   const { valid, errors, errorSchema } = methodRef.value.doValidate()
+    //   console.log(valid, errors, errorSchema)
+    // }
 
     return () => {
       const classes = classesRef.value
@@ -252,10 +257,11 @@ export default defineComponent({
                   schema={demo.schema!}
                   onChange={handleChange}
                   value={demo.data}
+                  rootSchema={demo.schema}
                 />
 
                 <div style={{ marginTop: '20px' }}>
-                  <button onClick={handleValidate}>校验</button>
+                  {/* <button onClick={handleValidate}>校验</button> */}
                 </div>
               </div>
             </div>

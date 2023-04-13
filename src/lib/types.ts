@@ -18,15 +18,16 @@ type SchemaRef = {
 }
 
 export interface Schema {
+  // 方便后续使用，直接传入一个类型字符串也行
   type?: SchemaTypes | string
   const?: any
   format?: string
 
   title?: string
   default?: any
-
+  //  | { $ref: string }
   properties?: {
-    [key: string]: Schema | { $ref: string }
+    [key: string]: Schema
   }
   items?: Schema | Schema[] | SchemaRef
   uniqueItems?: any
@@ -61,7 +62,7 @@ export type UISchema = any
 
 // props类型
 
-export const propTypes = {
+export const fieldPropTypes = {
   schema: {
     type: Object as PropType<Schema>,
     required: true,
@@ -72,6 +73,10 @@ export const propTypes = {
   },
   onChange: {
     type: Function as PropType<(v: any) => void>,
+    required: true,
+  },
+  rootSchema: {
+    type: Object as PropType<Schema>,
     required: true,
   },
 } as const

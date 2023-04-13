@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts" setup>
-import { propTypes } from '../types'
+import { fieldPropTypes } from '../types'
 // import { defineProps } from 'vue'
 
-const props = defineProps(propTypes)
+const props = defineProps(fieldPropTypes)
 
 const handleChange = (v: any) => {
   props.onChange(v.target.value)
