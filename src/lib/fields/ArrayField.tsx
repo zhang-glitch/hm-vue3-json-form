@@ -1,8 +1,8 @@
 import { PropType, defineComponent } from 'vue'
 import { Schema, fieldPropTypes } from '../types'
-import { useSchemaFormItemContext } from '../context'
+import { useSchemaFormContext } from '../context'
 import { createUseStyles } from 'vue-jss'
-import FormSelect from '../components/FormSelect'
+// import FormSelect from '../components/FormSelect'
 
 /**
  * 方式一: 单类型数组渲染
@@ -123,7 +123,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { SchemaFormItem } = useSchemaFormItemContext()
+      const { SchemaFormItem, theme } = useSchemaFormContext()
       const { schema, value, rootSchema } = props
 
       // 处理items是一个数组的case, 循环获取schema
@@ -207,6 +207,8 @@ export default defineComponent({
           key: item,
           value: item,
         }))
+        // 获取选择组件
+        const FormSelect = theme.widgets.FormSelect
         return (
           <div>
             <FormSelect

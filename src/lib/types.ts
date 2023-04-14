@@ -1,6 +1,6 @@
 // 定义一些类型
-
-import { PropType } from 'vue'
+import { DefineComponent, PropType } from 'vue'
+// import FormSelect from './components/FormSelect'
 
 // 定义枚举，外部也能用到
 export enum SchemaTypes {
@@ -80,3 +80,32 @@ export const fieldPropTypes = {
     required: true,
   },
 } as const
+
+// components通用props类型
+export const commonComponentProps = {
+  value: {
+    required: true,
+  },
+  onChange: {
+    type: Function as PropType<(v: any) => void>,
+    required: true,
+  },
+} as const
+
+const formSelectProps = {
+  ...commonComponentProps,
+  options: {
+    type: Array as PropType<{ key: string; value: any }[]>,
+    required: true,
+  },
+} as const
+
+// type FormSelectType = InstanceType<typeof FormSelect>
+type FormSelectType = DefineComponent<typeof formSelectProps>
+
+export interface Theme {
+  // 定义的一些叶子节点组件
+  widgets: {
+    FormSelect: FormSelectType
+  }
+}

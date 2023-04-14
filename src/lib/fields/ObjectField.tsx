@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { fieldPropTypes } from '../types'
-import { useSchemaFormItemContext } from '../context'
+import { useSchemaFormContext } from '../context'
 import { isObject } from '../utils'
 /**
 *   type: 'object',
@@ -41,7 +41,7 @@ export default defineComponent({
       const { schema, value } = props
       // 如果未提供就给一个空对象
       const properties = schema.properties || {}
-      const { SchemaFormItem } = useSchemaFormItemContext()
+      const { SchemaFormItem } = useSchemaFormContext()
       // 处理value
       const currentValue: any = isObject(value) ? value : {}
 

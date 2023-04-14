@@ -3,18 +3,7 @@ import { createUseStyles } from 'vue-jss'
 
 import MonacoEditor from './components/MonacoEditor'
 import SchemaForm from './lib/SchemaForm'
-
-// import CustomFormat from './plugins/custom-formats'
-// import CustomKeyword from './plugins/custom-keyworkds'
-
-// import {
-//   ThemeProvider as VJSFThemeProvider,
-//   SchemaForm,
-//   Schema,
-//   UISchema,
-// } from '@v3jsf/core'
-
-// import VjsfDefaultThemeProvider from '@v3jsf/theme-default'
+import themeDefault from './lib/theme-default'
 
 import demos from './demos'
 
@@ -257,7 +246,7 @@ export default defineComponent({
                   schema={demo.schema!}
                   onChange={handleChange}
                   value={demo.data}
-                  rootSchema={demo.schema}
+                  theme={themeDefault as any}
                 />
 
                 <div style={{ marginTop: '20px' }}>

@@ -1,4 +1,4 @@
-import { fieldPropTypes } from './types'
+import { Theme, fieldPropTypes } from './types'
 import { inject, defineComponent } from 'vue'
 // import SchemaFormItem from './SchemaFormItem'
 const typeHelperComponent = defineComponent({
@@ -20,9 +20,10 @@ export const schemaFormItemSymbol = Symbol()
 
 // export const schemaFormItem = schemaFormItemContext
 
-export function useSchemaFormItemContext() {
-  const context: { SchemaFormItem: SchemaFormItemType } | undefined =
-    inject(schemaFormItemSymbol)
+export function useSchemaFormContext() {
+  const context:
+    | { SchemaFormItem: SchemaFormItemType; theme: Theme }
+    | undefined = inject(schemaFormItemSymbol)
 
   if (!context) {
     throw new Error('SchemaForm is needed')

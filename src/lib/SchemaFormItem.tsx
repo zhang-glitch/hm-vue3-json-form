@@ -19,7 +19,6 @@ export default defineComponent({
       const retrievedSchema = retrieveSchema(schema, rootSchema, value)
       return retrievedSchema
     })
-    console.log('props.value', props.value)
     return () => {
       const { schema } = props
       // 判断渲染什么类型的schema
