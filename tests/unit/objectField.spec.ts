@@ -1,6 +1,6 @@
 import SchemaForm, { ObjectField, StringField, NumberField } from '@/lib'
 import { mount } from '@vue/test-utils'
-import theme from '@/lib/theme-default'
+import TestComponent from './utils/TestComponent'
 
 describe('ObjectField', () => {
   let schema = {}
@@ -21,15 +21,14 @@ describe('ObjectField', () => {
   // 测试渲染
   it('should render properties to schema item', async () => {
     let value = {}
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         value,
         schema,
-        rootSchema: schema,
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 
@@ -44,15 +43,14 @@ describe('ObjectField', () => {
     let value: any = {
       name: 'zh',
     }
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         value,
         schema,
-        rootSchema: schema,
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 
@@ -65,15 +63,14 @@ describe('ObjectField', () => {
   // 测试修改值为undefined时
   it('should correct change value equal undefined', async () => {
     let value: any = { age: 123 }
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         value,
         schema,
-        rootSchema: schema,
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 

@@ -5,13 +5,13 @@ import SchemaForm, {
   StringField,
 } from '@/lib'
 import { mount } from '@vue/test-utils'
-import theme from '@/lib/theme-default'
+import TestComponent from './utils/TestComponent'
 
 describe('ArrayField', () => {
   // 测试多表单项渲染 >npm run test:unit -- --t=multiple
   it('should single item by value render', () => {
     let value: any = []
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         schema: {
           type: 'array',
@@ -25,21 +25,10 @@ describe('ArrayField', () => {
           ],
         },
         value,
-        rootSchema: {
-          type: 'array',
-          items: [
-            {
-              type: 'string',
-            },
-            {
-              type: 'number',
-            },
-          ],
-        },
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 
@@ -53,7 +42,7 @@ describe('ArrayField', () => {
   // 测试单表单项，根据value数据渲染 >npm run test:unit -- --t=single
   it('should multiple item render', () => {
     let value: any = ['zh', 'llm']
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         schema: {
           type: 'array',
@@ -62,19 +51,10 @@ describe('ArrayField', () => {
           },
         },
         value,
-        rootSchema: {
-          type: 'array',
-          items: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-        },
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 
@@ -87,7 +67,7 @@ describe('ArrayField', () => {
   // 测试多选表单，根据value数据渲染 >npm run test:unit -- --t=single
   it('should single item to render by options', () => {
     let value: any = []
-    const wrapper = mount(SchemaForm, {
+    const wrapper = mount(TestComponent, {
       props: {
         schema: {
           type: 'array',
@@ -97,20 +77,10 @@ describe('ArrayField', () => {
           },
         },
         value,
-        rootSchema: {
-          type: 'array',
-          items: {
-            type: 'array',
-            items: {
-              type: 'string',
-              enum: [1, 2, 3],
-            },
-          },
-        },
+
         onChange(v: any) {
           value = v
         },
-        theme: theme as any,
       },
     })
 

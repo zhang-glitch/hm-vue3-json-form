@@ -29,6 +29,7 @@ export default {
   // },
   schema: {
     type: 'string',
+    minLength: 10,
   },
   uiSchema: {},
   default: 'zh',

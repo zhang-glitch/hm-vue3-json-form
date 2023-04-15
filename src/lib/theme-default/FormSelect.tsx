@@ -1,20 +1,10 @@
 import { PropType, defineComponent, ref, watch } from 'vue'
+import { FormSelectType, formSelectProps } from '../types'
 
-export default defineComponent({
+// 显示指定组件类型，推断的类型会有问题，在赋值的时候
+const FormSelect = defineComponent({
   name: 'FormSelect',
-  props: {
-    value: {
-      required: true,
-    },
-    onChange: {
-      type: Function as PropType<(v: any) => void>,
-      required: true,
-    },
-    options: {
-      type: Array as PropType<{ key: string; value: any }[]>,
-      required: true,
-    },
-  },
+  props: formSelectProps,
   setup(props) {
     const currentValueRef = ref(props.value)
     // 让props.value做到双向绑定
@@ -44,3 +34,5 @@ export default defineComponent({
     }
   },
 })
+
+export default FormSelect

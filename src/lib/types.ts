@@ -92,7 +92,7 @@ export const commonComponentProps = {
   },
 } as const
 
-const formSelectProps = {
+export const formSelectProps = {
   ...commonComponentProps,
   options: {
     type: Array as PropType<{ key: string; value: any }[]>,
@@ -101,11 +101,22 @@ const formSelectProps = {
 } as const
 
 // type FormSelectType = InstanceType<typeof FormSelect>
-type FormSelectType = DefineComponent<typeof formSelectProps>
+export type FormSelectType = DefineComponent<typeof formSelectProps>
+export type CommonComponentType = DefineComponent<typeof commonComponentProps>
 
+export enum FormSelectEnum {
+  FormSelect = 'FormSelect',
+}
+
+export enum CommonComponentEnum {
+  FormText = 'FormText',
+  FormNumber = 'FormNumber',
+}
 export interface Theme {
   // 定义的一些叶子节点组件
   widgets: {
-    FormSelect: FormSelectType
+    [FormSelectEnum.FormSelect]: FormSelectType
+    [CommonComponentEnum.FormText]: CommonComponentType
+    [CommonComponentEnum.FormNumber]: CommonComponentType
   }
 }

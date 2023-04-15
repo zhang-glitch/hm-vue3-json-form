@@ -1,13 +1,22 @@
-import { defineComponent, ref, Ref, reactive, watchEffect } from 'vue'
+import {
+  defineComponent,
+  ref,
+  Ref,
+  reactive,
+  watchEffect,
+  onMounted,
+} from 'vue'
 import { createUseStyles } from 'vue-jss'
 
 import MonacoEditor from './components/MonacoEditor'
 import SchemaForm from './lib/SchemaForm'
 import themeDefault from './lib/theme-default'
+import { ThemeProvider } from './lib'
 
 import demos from './demos'
 
 import { Schema, UISchema } from './lib/types'
+import theme from './lib/theme-default'
 
 // 转换对象为字符串
 function toJson(data: any) {
@@ -136,8 +145,6 @@ export default defineComponent({
       demo.customValidate = d.customValidate
     })
 
-    const methodRef: Ref<any> = ref()
-
     // vue-jss是基于vue3的，所以取值需要使用.value
     const classesRef = useStyles()
 
@@ -167,17 +174,18 @@ export default defineComponent({
     const handleDataChange = (v: string) => handleCodeChange('data', v)
     const handleUISchemaChange = (v: string) => handleCodeChange('uiSchema', v)
 
+    // 提供SchemaFormRef
+    const schemaFormRef = ref<InstanceType<typeof SchemaForm>>()
     // 验证，内部就是调用ajv.validate函数处理的。
-    // const handleValidate = () => {
-    //   const { valid, errors, errorSchema } = methodRef.value.doValidate()
-    //   console.log(valid, errors, errorSchema)
-    // }
+    const handleValidate = () => {
+      if (!schemaFormRef.value) return
+      const validateRes = schemaFormRef.value.$.exposed!.onValidate()
+      console.log('validateRes', validateRes)
+    }
 
     return () => {
       const classes = classesRef.value
       const selected = selectedRef.value
-
-      console.log(methodRef)
 
       return (
         // <VjsfDefaultThemeProvider>
@@ -242,15 +250,17 @@ export default defineComponent({
                     },
                   ]}
                 /> */}
-                <SchemaForm
-                  schema={demo.schema!}
-                  onChange={handleChange}
-                  value={demo.data}
-                  theme={themeDefault as any}
-                />
+                <ThemeProvider theme={theme as any}>
+                  <SchemaForm
+                    schema={demo.schema!}
+                    onChange={handleChange}
+                    value={demo.data}
+                    ref={schemaFormRef}
+                  />
+                </ThemeProvider>
 
                 <div style={{ marginTop: '20px' }}>
-                  {/* <button onClick={handleValidate}>校验</button> */}
+                  <button onClick={handleValidate}>校验</button>
                 </div>
               </div>
             </div>

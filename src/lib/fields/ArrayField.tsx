@@ -1,7 +1,8 @@
 import { PropType, defineComponent } from 'vue'
-import { Schema, fieldPropTypes } from '../types'
+import { FormSelectEnum, Schema, fieldPropTypes } from '../types'
 import { useSchemaFormContext } from '../context'
 import { createUseStyles } from 'vue-jss'
+import { getWidget } from '../theme'
 // import FormSelect from '../components/FormSelect'
 
 /**
@@ -122,8 +123,12 @@ export default defineComponent({
       props.onChange(value)
     }
 
+    // 处理叶子组件
+    const FormSelect = getWidget(FormSelectEnum.FormSelect).value
+
     return () => {
-      const { SchemaFormItem, theme } = useSchemaFormContext()
+      // const { SchemaFormItem, theme } = useSchemaFormContext()
+      const { SchemaFormItem } = useSchemaFormContext()
       const { schema, value, rootSchema } = props
 
       // 处理items是一个数组的case, 循环获取schema
@@ -208,7 +213,7 @@ export default defineComponent({
           value: item,
         }))
         // 获取选择组件
-        const FormSelect = theme.widgets.FormSelect
+        // const FormSelect = theme.widgets.FormSelect
         return (
           <div>
             <FormSelect

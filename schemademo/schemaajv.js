@@ -35,9 +35,17 @@ const schema = {
     bar: {
       type: 'string',
       minLength: 10,
-      errorMessage: {
-        type: '这个是不对的',
-      },
+      // errorMessage: {
+      //   type: '这个是不对的',
+      //   minLength: '长度不对',
+      // },
+    },
+  },
+  additionalProperties: false,
+  errorMessage: {
+    properties: {
+      foo: 'data.foo should be integer >= 2',
+      bar: 'data.bar should be string with length >= 2',
     },
   },
   // 如果不加required,属性都不是必须的。
@@ -47,10 +55,38 @@ const schema = {
 const validate = ajv.compile(schema)
 
 const data = {
-  foo: 'zhllm1111',
-  bar: 111,
+  foo: 'zhllm111',
+  bar: '111',
 }
 
 const valid = validate(data)
 localize.zh(validate.errors)
 if (!valid) console.log(validate.errors)
+
+// const Ajv = require('ajv')
+// const ajvErrors = require('ajv-errors')
+// const ajv = new Ajv({ allErrors: true }) // options can be passed, e.g. {allErrors: true}
+// ajvErrors(ajv)
+// const schema = {
+//   type: 'object',
+//   required: ['foo', 'bar'],
+//   allOf: [
+//     {
+//       properties: {
+//         foo: { type: 'integer', minimum: 2 },
+//         bar: { type: 'string', minLength: 2 },
+//       },
+//       additionalProperties: false,
+//     },
+//   ],
+//   errorMessage: {
+//     properties: {
+//       foo: 'data.foo should be integer >= 2',
+//       bar: 'data.bar should be string with length >= 2',
+//     },
+//   },
+// }
+
+// const validate = ajv.compile(schema)
+// console.log(validate({ foo: 1, bar: 'a' })) // false
+// console.log(validate.errors) // processed errors
