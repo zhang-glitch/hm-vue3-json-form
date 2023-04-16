@@ -1,13 +1,21 @@
-// 该组件主要是为了解耦theme和schemaform组件的。
+// 该组件主要是为了解耦theme和schemaform组件的。提供一个默认的widget组件
 import {
   ComputedRef,
+  ExtractPropTypes,
   PropType,
   computed,
   defineComponent,
   inject,
   provide,
+  ref,
 } from 'vue'
-import { CommonComponentEnum, FormSelectEnum, Theme } from './types'
+import {
+  CommonComponentEnum,
+  fieldPropTypes,
+  FormSelectEnum,
+  Theme,
+} from './types'
+import { isObject } from './utils'
 
 export default defineComponent({
   name: 'ThemeProvider',
@@ -31,7 +39,17 @@ export default defineComponent({
 })
 
 // 根据传入的叶子组件名，获取对应的组件
-export function getWidget(name: FormSelectEnum | CommonComponentEnum) {
+export function getWidget(
+  name: FormSelectEnum | CommonComponentEnum,
+  props?: ExtractPropTypes<typeof fieldPropTypes>,
+) {
+  // 如果外界传递额外的widget,将使用外界的
+  if (props) {
+    if (isObject(props.uiSchema.widget)) {
+      return ref(props.uiSchema.widget)
+    }
+  }
+
   const themeRef: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>('THEME_PROVIDER_KEY')
 

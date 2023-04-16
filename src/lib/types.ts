@@ -1,5 +1,6 @@
 // 定义一些类型
 import { DefineComponent, PropType } from 'vue'
+import { ErrorSchema } from './validator'
 // import FormSelect from './components/FormSelect'
 
 // 定义枚举，外部也能用到
@@ -58,10 +59,18 @@ export interface Schema {
 //   [property: string]: UISchema
 // }
 
-export type UISchema = any
+export type UISchema = {
+  widget?: string | CommonComponentType
+  properties?: {
+    [key: string]: UISchema
+  }
+  // 如果是 {type: "array", items: [{type: "string"}, {type: "number"}]}怎么办
+  items?: UISchema | UISchema[]
+} & {
+  [key: string]: string
+}
 
-// props类型
-
+// field组件的props类型
 export const fieldPropTypes = {
   schema: {
     type: Object as PropType<Schema>,
@@ -79,6 +88,14 @@ export const fieldPropTypes = {
     type: Object as PropType<Schema>,
     required: true,
   },
+  errorSchema: {
+    type: Object as PropType<ErrorSchema>,
+    required: true,
+  },
+  uiSchema: {
+    type: Object as PropType<UISchema>,
+    required: true,
+  },
 } as const
 
 // components通用props类型
@@ -89,6 +106,16 @@ export const commonComponentProps = {
   onChange: {
     type: Function as PropType<(v: any) => void>,
     required: true,
+  },
+  errors: {
+    type: Array as PropType<string[]>,
+  },
+  schema: {
+    type: Object as PropType<Schema>,
+    required: true,
+  },
+  uiSchemaOptions: {
+    type: Object as PropType<{ [key: string]: any }>,
   },
 } as const
 

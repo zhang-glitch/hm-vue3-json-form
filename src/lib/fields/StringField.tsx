@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { getWidget } from '../theme'
 import {
   CommonComponentEnum,
@@ -10,11 +10,42 @@ export default defineComponent({
   name: 'StringField',
   props: fieldPropTypes,
   setup(props) {
-    const FormText = getWidget(CommonComponentEnum.FormText)
-      .value as CommonComponentType
+    const FormTextRef = getWidget(CommonComponentEnum.FormText, props)
 
     return () => {
-      return <FormText value={props.value} onChange={props.onChange} />
+      // const UISchema = props.uiSchema.widget
+      const { widget, properties, items, ...uiSchemaOptions } = props.uiSchema
+      const FormText = FormTextRef.value as CommonComponentType
+      return (
+        <FormText
+          value={props.value}
+          onChange={props.onChange}
+          errors={props.errorSchema.__errors}
+          schema={props.schema}
+          uiSchemaOptions={uiSchemaOptions}
+        />
+      )
     }
+    // return () => {
+    //   const UISchema = props.uiSchema.widget
+    //   const { widget, properties, items, ...uiSchemaOptions } = props.uiSchema
+    //   return UISchema ? (
+    //     <UISchema
+    //       value={props.value}
+    //       onChange={props.onChange}
+    //       errors={props.errorSchema.__errors}
+    //       schema={props.schema}
+    //       uiSchemaOptions={uiSchemaOptions}
+    //     />
+    //   ) : (
+    //     <FormText
+    //       value={props.value}
+    //       onChange={props.onChange}
+    //       errors={props.errorSchema.__errors}
+    //       schema={props.schema}
+    //       uiSchemaOptions={uiSchemaOptions}
+    //     />
+    //   )
+    // }
   },
 })

@@ -1,5 +1,10 @@
 import { PropType, defineComponent } from 'vue'
-import { FormSelectEnum, Schema, fieldPropTypes } from '../types'
+import {
+  FormSelectEnum,
+  FormSelectType,
+  Schema,
+  fieldPropTypes,
+} from '../types'
 import { useSchemaFormContext } from '../context'
 import { createUseStyles } from 'vue-jss'
 import { getWidget } from '../theme'
@@ -114,6 +119,7 @@ const ArrayItemWrapper = defineComponent({
   },
 })
 export default defineComponent({
+  name: 'ArrayField',
   props: fieldPropTypes,
   setup(props) {
     // 处理onChange
@@ -123,19 +129,19 @@ export default defineComponent({
       props.onChange(value)
     }
 
-    // 处理叶子组件
-    const FormSelect = getWidget(FormSelectEnum.FormSelect).value
-
     return () => {
       // const { SchemaFormItem, theme } = useSchemaFormContext()
       const { SchemaFormItem } = useSchemaFormContext()
-      const { schema, value, rootSchema } = props
+      const { schema, value, rootSchema, errorSchema, uiSchema } = props
 
       // 处理items是一个数组的case, 循环获取schema
       const schemaItems = schema.items
       let schemas: Schema[] = []
       const isMultiType = Array.isArray(schemaItems)
       const isSelect = schemaItems && (schemaItems as any).enum
+
+      // 处理uiSchema其他内容
+      const { widget, properties, items, ...uiSchemaOptions } = props.uiSchema
 
       if (isMultiType) {
         schemas = schemaItems
@@ -150,6 +156,13 @@ export default defineComponent({
                   value={currentValue[index]}
                   rootSchema={rootSchema}
                   onChange={(v: any) => handleChange(v, index)}
+                  errorSchema={errorSchema[index] || {}}
+                  uiSchema={
+                    (uiSchema.items &&
+                      Array.isArray(uiSchema.items) &&
+                      uiSchema.items[index]) ||
+                    {}
+                  }
                   key={index}
                 ></SchemaFormItem>
               )
@@ -198,6 +211,10 @@ export default defineComponent({
                     value={val}
                     rootSchema={rootSchema}
                     onChange={(v: any) => handleChange(v, index)}
+                    errorSchema={errorSchema[index] || {}}
+                    uiSchema={
+                      (!Array.isArray(uiSchema.items) && uiSchema.items) || {}
+                    }
                     key={index}
                   ></SchemaFormItem>
                 </ArrayItemWrapper>
@@ -214,12 +231,18 @@ export default defineComponent({
         }))
         // 获取选择组件
         // const FormSelect = theme.widgets.FormSelect
+        // 处理叶子组件
+        const FormSelect = getWidget(FormSelectEnum.FormSelect, props)
+          .value as FormSelectType
         return (
           <div>
             <FormSelect
               value={value}
               onChange={props.onChange}
               options={options}
+              errors={props.errorSchema.__errors}
+              schema={props.schema}
+              uiSchemaOptions={uiSchemaOptions}
             />
           </div>
         )

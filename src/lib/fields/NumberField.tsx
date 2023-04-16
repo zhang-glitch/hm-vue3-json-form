@@ -10,10 +10,20 @@ export default defineComponent({
   name: 'NumberField',
   props: fieldPropTypes,
   setup(props) {
-    const FormNumber = getWidget(CommonComponentEnum.FormNumber)
-      .value as CommonComponentType
+    const FormNumberRef = getWidget(CommonComponentEnum.FormNumber, props)
+
     return () => {
-      return <FormNumber value={props.value} onChange={props.onChange} />
+      const { widget, properties, items, ...uiSchemaOptions } = props.uiSchema
+      const FormNumber = FormNumberRef.value as CommonComponentType
+      return (
+        <FormNumber
+          value={props.value}
+          onChange={props.onChange}
+          errors={props.errorSchema.__errors}
+          schema={props.schema}
+          uiSchemaOptions={uiSchemaOptions}
+        />
+      )
     }
   },
 })

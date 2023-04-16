@@ -9,7 +9,7 @@ import ArrayField from './fields/ArrayField'
 export default defineComponent({
   name: 'SchemaFormItem',
   props: fieldPropTypes,
-  setup(props, { emit, slots, attrs }) {
+  setup(props) {
     // TODO: 如果type没有指定，我们需要猜测type类型
     let componentValue: Component
     // 处理schema

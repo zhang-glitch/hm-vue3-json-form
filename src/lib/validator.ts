@@ -18,13 +18,14 @@ interface ErrorSchemaObject {
   [level: string]: ErrorSchema
 }
 /**
+ * 就是根据valueForm数据，如果该项有错误，就在内部加上__errors
  * {
  *  obj: {
  *    a: {
- *      ...
+ *      ...,
+ *      __errors: []
  *    }
- *  },
- * __errors: []
+ *  }
  * }
  */
 export type ErrorSchema = ErrorSchemaObject & {
@@ -66,7 +67,7 @@ function toErrorSchema(errors: TransformedErrorObject[]) {
     //     a: {}
     //   }
     // }
-    // 将每个error的数组keys转为对象
+    // 将每个error的数组keys转为对象, 类似于递归
     for (const segment of path.slice(0)) {
       if (!(segment in parent)) {
         ;(parent as any)[segment] = {}
@@ -79,6 +80,7 @@ function toErrorSchema(errors: TransformedErrorObject[]) {
     //     a: {__errors: [message]}
     //   }
     // }
+    // 只处理叶子属性的错误信息
     if (Array.isArray(parent.__errors)) {
       parent.__errors = parent.__errors.concat(message || '')
     } else {
@@ -98,7 +100,7 @@ function transformErrors(
 
   //   {
   //     keyword: 'errorMessage',
-  //     dataPath: '/name',
+  //     instancePath: '/name',
   //     schemaPath: '#/properties/name/errorMessage',
   //     params: { errors: [Array] },
   //     message: '自定义关键字验证 test 失败了'
@@ -154,6 +156,8 @@ export async function validateFormData(
   }
 
   const proxy = createErrorProxy()
+  // customValidate(formData, proxy)
+  // 有可能自定义校验是异步的
   await customValidate(formData, proxy)
   const newErrorSchema = mergetObjects(errorSchema, proxy, true)
   const newErrors = toErrorList(newErrorSchema)

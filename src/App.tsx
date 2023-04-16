@@ -43,7 +43,7 @@ const useStyles = createUseStyles({
   },
   menu: {
     marginBottom: 20,
-    backgroundColor: '#3fb983',
+    backgroundColor: 'pink',
     paddingTop: 20,
     minWidth: 1200,
     '& > h1': {
@@ -88,15 +88,15 @@ const useStyles = createUseStyles({
     },
     '&:hover': {
       background: '#fff',
-      color: '#3fb983',
+      color: 'pink',
     },
   },
   menuSelected: {
     background: '#fff',
-    color: '#3fb983',
+    color: 'pink',
     '&:hover': {
       background: '#fff',
-      color: '#3fb983',
+      color: 'pink',
     },
   },
   menus: {
@@ -126,12 +126,14 @@ export default defineComponent({
       schemaCode: '',
       dataCode: '',
       uiSchemaCode: '',
+      customValidate: undefined,
     })
 
     // 切换案列tabs
     watchEffect(() => {
       // 当案列切换
       const index = selectedRef.value
+      // 我们每次切换demoschema时，我们都会将修改的值保存到demos中，因为demos是对象。更新了就会通过引用保存下来。
       const d: any = demos[index]
       demo.schema = d.schema
       // 表单默认值
@@ -148,9 +150,10 @@ export default defineComponent({
     // vue-jss是基于vue3的，所以取值需要使用.value
     const classesRef = useStyles()
 
-    // 获取表单组件data变化
+    // 获取表单组件data变化。不管哪个表单项变化，他都会被触发
     const handleChange = (v: any) => {
       demo.data = v
+      // 更新dataSchema json编辑框
       demo.dataCode = toJson(v)
     }
 
@@ -177,9 +180,9 @@ export default defineComponent({
     // 提供SchemaFormRef
     const schemaFormRef = ref<InstanceType<typeof SchemaForm>>()
     // 验证，内部就是调用ajv.validate函数处理的。
-    const handleValidate = () => {
+    const handleValidate = async () => {
       if (!schemaFormRef.value) return
-      const validateRes = schemaFormRef.value.$.exposed!.onValidate()
+      const validateRes = await schemaFormRef.value.$.exposed!.onValidate()
       console.log('validateRes', validateRes)
     }
 
@@ -188,10 +191,9 @@ export default defineComponent({
       const selected = selectedRef.value
 
       return (
-        // <VjsfDefaultThemeProvider>
         <>
           <div class={classes.menu}>
-            <h1>Vue3 JsonSchema Form</h1>
+            <h1>HM Vue3 JsonSchema Form</h1>
             <div class={classes.menus}>
               {demos.map((demo, index) => (
                 <button
@@ -235,27 +237,14 @@ export default defineComponent({
                 </div>
               </div>
               <div class={classes.form}>
-                {/* <SchemaForm
-                  schema={demo.schema!}
-                  uiSchema={demo.uiSchema!}
-                  onChange={handleChange}
-                  contextRef={methodRef}
-                  value={demo.data}
-                  customValidate={demo.customValidate}
-                  // {...{ customValidate: demo.customValidate }}
-                  plugins={[
-                    {
-                      customFormats: [CustomFormat],
-                      customKeywords: [CustomKeyword],
-                    },
-                  ]}
-                /> */}
                 <ThemeProvider theme={theme as any}>
                   <SchemaForm
                     schema={demo.schema!}
                     onChange={handleChange}
                     value={demo.data}
                     ref={schemaFormRef}
+                    customValidate={demo.customValidate}
+                    uiSchema={demo.uiSchema}
                   />
                 </ThemeProvider>
 
@@ -266,7 +255,6 @@ export default defineComponent({
             </div>
           </div>
         </>
-        // </VjsfDefaultThemeProvider>
       )
     }
   },
